@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NotebookLM 動態簡報指令生成器 (Interactive Prompt Builder)</title>
+    <style>
+        /* CSS 變數定義與全域樣式設定 */
+        :root {
+            --bg-color: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --primary-accent: #202124; /* Google 深灰色系 */
+            --secondary-accent: #1A73E8; /* Google 藍色系 */
+            --gray-band: #F1F3F4;
+            --text-main: #3C4043;
+            --text-muted: #5F6368;
+            --border-radius: 16px;
+            --transition-speed: 0.25s;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            line-height: 1.5;
+        }
+
+       .container {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            max-width: 1300px;
+            min-height: 80vh;
+            gap: 40px;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+        }
+
+        /* 左側控制面板樣式 */
+       .control-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            padding-right: 20px;
+            border-right: 2px solid var(--gray-band);
+        }
+
+       .header-section h1 {
+            font-size: 28px;
+            color: var(--primary-accent);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+       .header-section p.subtitle {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-top: 0;
+        }
+
+       .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--primary-accent);
+        }
+
+        input[type="text"], 
+        input[type="number"], 
+        select {
+            padding: 14px;
+            border: 1.5px solid #DADCE0;
+            border-radius: 8px;
+            font-size: 15px;
+            color: var(--text-main);
+            background-color: #FFFFFF;
+            transition: border var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        input[type="text"]:focus, 
+        select:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--secondary-accent);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+        }
+
+       .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background-color: var(--gray-band);
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+       .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: var(--secondary-accent);
+        }
+
+       .checkbox-group label {
+            font-weight: 500;
+            cursor: pointer;
+            line-height: 1.4;
+        }
+
+        /* 右側輸出預覽區樣式 */
+       .output-panel {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            background-color: #F8F9FA;
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid #E8EAED;
+        }
+
+       .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #DADCE0;
+        }
+
+       .output-header h2 {
+            margin: 0;
+            font-size: 20px;
+            color: var(--primary-accent);
+        }
+
+       .btn-copy {
+            background-color: var(--secondary-accent);
+            color: #FFFFFF;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background var(--transition-speed), transform 0.1s;
+        }
+
+       .btn-copy:hover {
+            background-color: #1557B0;
+        }
+
+       .btn-copy:active {
+            transform: scale(0.97);
+        }
+
+        textarea#prompt-output {
+            flex-grow: 1;
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #202124;
+            resize: none;
+            outline: none;
+            white-space: pre-wrap;
+        }
+
+        /* 響應式佈局調整 */
+        @media (max-width: 900px) {
+           .container {
+                flex-direction: column;
+                padding: 20px;
+            }
+           .control-panel {
+                border-right: none;
+                border-bottom: 2px solid var(--gray-band);
+                padding-right: 0;
+                padding-bottom: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="control-panel">
+        <div class="header-section">
+            <h1>NotebookLM 指令生成核心</h1>
+            <p class="subtitle">基於 Nano Banana Pro 視覺模型架構，動態組裝最佳化提示詞</p>
+        </div>
+
+        <div class="form-group">
+            <label for="input-topic">專案核心主題 (Core Topic)</label>
+            <input type="text" id="input-topic" placeholder="例如：2026年全球供應鏈重組之影響與對策" oninput="generatePrompt()">
+        </div>
+
+        <div class="form-group">
+            <label for="select-scenario">目標情境與模板策略 (Scenario & Template Style)</label>
+            <select id="select-scenario" onchange="generatePrompt()">
+                <option value="corporate">董事會級極簡企業簡報 (高端/冷靜/極簡數據)</option>
+                <option value="retrogame">像素復古遊戲新手教學 (闖關感/升級/低認知阻力)</option>
+                <option value="academic">黑板老師知識整理風格 (親切/手繪/步驟拆解)</option>
+                <option value="manga">動態漫畫分鏡敘事簡報 (高對比/英雄之旅/網點)</option>
+                <option value="infographic">資訊圖表報告風格 (分割對比/物理機制隱喻)</option>
+                <option value="uidemo">UI/App 設計展示風 (介面操作/玻璃擬物化/高解析)</option>
+                <option value="claymation">黏土定格動畫簡報 (立體感/趣味性/實體材質)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="input-audience">預設受眾分析 (Target Audience)</label>
+            <input type="text" id="input-audience" placeholder="例如：高階經理人、潛在投資方" oninput="generatePrompt()">
+        </div>
+
+        <div class="form-group">
+            <label for="input-slides">系統輸出頁數限制 (Max Slides Allocation)</label>
+            <input type="number" id="input-slides" value="12" min="5" max="30" oninput="generatePrompt()">
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="check-strict" checked onchange="generatePrompt()">
+            <label for="check-strict">
+                啟動極限文字約束條件<br>
+                <span style="font-size: 13px; font-weight: normal; color: var(--text-muted);">強制防止文字牆生成，限制標題字數與每頁最多4點條列，確保高資訊對比度。</span>
+            </label>
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="check-tables" onchange="generatePrompt()">
+            <label for="check-tables">
+                啟動數據強制結構化處理<br>
+                <span style="font-size: 13px; font-weight: normal; color: var(--text-muted);">指示 AI 在渲染前，精確擷取文獻數據並轉換為對比矩陣或臨床統計表格。</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="output-panel">
+        <div class="output-header">
+            <h2>生成的最佳化提示詞 (Optimized Prompt)</h2>
+            <button class="btn-copy" onclick="copyPrompt()">一鍵複製指令</button>
+        </div>
+        <textarea id="prompt-output" readonly></textarea>
+    </div>
+</div>
+
+<script>
+    // 基礎模板物件字典 (Template Dictionary Array)
+    const templates = {
+        corporate: {
+            role: "Create a professional, executive-level slide deck optimized for absolute clarity, visual impact, and high-stakes persuasion.",
+            style: "Tone & style: Modern, minimalist, high-end corporate. Confident and highly authoritative. Visual Identity: Use a sharp, crisp white background with 'Business Red' title accents. Maintain substantial, purposeful white space. Absolutely no decorative or unnecessary visual elements—every pixel must carry informational value.",
+            structure: "Follow a strict logical narrative flow: Shocking Fact/Problem -> Industry Context -> Proposed Solution -> Empirical Evidence -> Call to Action. Include a mandatory Title slide, Agenda, and explicit Conclusion slide."
+        },
+        retrogame: {
+            role: "Design an engaging, gamified educational presentation designed to drastically lower initial cognitive resistance for beginners.",
+            style: "Tone & Style: Fun, rewarding, and encouraging. Visual Identity: 8-bit retro pixel video game aesthetic. Integrate classic UI elements such as 'HP/MP status bars', 'Level Up' notifications, and 'Insert Coin' visual metaphors to simulate a role-playing game progression.",
+            structure: "Narrative flow must feel like unlocking stages. Progress from 'Level 1: The Basics' to 'Boss Battle: Complex Integration'. Use step-by-step guidance."
+        },
+        academic: {
+            role: "Develop a structured educational presentation optimized for cognitive retention and rigorous logical deduction.",
+            style: "Tone & Style: Calm, professional, credible, and pedagogical. Visual Identity: Professional sketch-noting aesthetic simulating a deep green classroom blackboard. Use white, yellow, and pink handwritten chalk-style fonts. Include minimalist hand-drawn icons and organic arrow connectors.",
+            structure: "Sequential presentation: Concept Definition -> Underlying Mechanism -> Step-by-Step Breakdown -> Practical Application -> Summary. Every slide title must serve a guiding, interrogative function."
+        },
+        manga: {
+            role: "Act as a top art director generating a visually focused, high-sensibility presentation slide deck that sparks emotional resonance.",
+            style: "Tone: Energetic, expressive, and highly narrative-driven. Visual Identity: Modern Japanese manga aesthetics. Background Color: Pure White. Text Color: Black. Use traditional ink drawing techniques with halftone screentones for shading. Include crisp line weights (G-pen) and dynamic comic paneling with diagonal cuts. Use dramatic impact bursts for emphasis.",
+            structure: "Map the content to a Hero's Journey: The Chaos/Problem -> The Struggle -> The Discovery/Solution -> The Transformation."
+        },
+        infographic: {
+            role: "Design a scannable, highly visual presentation focused on comparative analysis, physical metaphors, and data storytelling.",
+            style: "Visual Identity: Information graphic aesthetic using physical metaphors (e.g., funnels, seesaws). Split-screen comparison layout. Use contrasting colors for each option. Focus on visual hierarchy: render key numbers in extremely large typography wrapped in clean geometric frames.",
+            structure: "Matrix comparison and feature alignment. Translate all abstract relationships into spatial proportions."
+        },
+        uidemo: {
+            role: "Generate a sleek, modern presentation focused on digital product showcasing and user experience flow.",
+            style: "Tone & Style: Cutting-edge, innovative, and user-centric. Visual Identity: 'Split UI' design layout. Feature high-resolution mobile phone or browser window mockups displaying interfaces. Ensure realistic screen reflections and a premium glassmorphism feel.",
+            structure: "Focus purely on demonstrating functionality through a visual UI sequence, leading the user through a digital journey."
+        },
+        claymation: {
+            role: "Create a charming and approachable presentation using physical stop-motion animation aesthetics.",
+            style: "Tone & Style: Playful, tactile, and highly memorable. Visual Identity: 3D claymation style. Elements should appear to be sculpted from modeling clay with visible fingerprint textures, soft diffuse studio lighting, and realistic depth of field creating a miniature diorama effect.",
+            structure: "Tell a grounded story by moving 'clay figures' through different scenes to explain abstract processes."
+        }
+    };
+
+    // 核心處理邏輯：動態組裝與疊加提示詞字串
+    function generatePrompt() {
+        const topic = document.getElementById('input-topic').value |
+
+| "[在此輸入您的核心主題]";
+        const scenario = document.getElementById('select-scenario').value;
+        const audience = document.getElementById('input-audience').value |
+
+| "[明確定義目標受眾]";
+        const slides = document.getElementById('input-slides').value;
+        const useStrictText = document.getElementById('check-strict').checked;
+        const useTables = document.getElementById('check-tables').checked;
+
+        const baseTpl = templates[scenario];
+
+        // 第一層：角色與核心任務設定
+        let finalPrompt = `${baseTpl.role}\n\n`;
+        
+        // 第二層：任務參數注入
+        finalPrompt += `--- ---\n`;
+        finalPrompt += `> Topic & Objective: Analyze the uploaded sources to create a highly tailored deck specifically about "${topic}".\n`;
+        finalPrompt += `> Target Audience: ${audience}\n`;
+        finalPrompt += `> Length constraint: Generate exactly ${slides} slides.\n\n`;
+        
+        // 第三層：視覺與敘事骨架
+        finalPrompt += `--- ---\n`;
+        finalPrompt += `> Design Identity: ${baseTpl.style}\n\n`;
+        finalPrompt += `> Narrative Structure: ${baseTpl.structure}\n\n`;
+
+        // 第四層：條件式極限約束 (Conditional Limiters)
+        finalPrompt += `--- ---\n`;
+        
+        if (useStrictText) {
+            finalPrompt += `[!] TEXT LIMITATION: You must prevent visual overcrowding. Maximum 4 bullet points per slide. Each bullet must be <= 12 words, phrased as complete, punchy ideas. Avoid large blocks of text.\n`;
+            finalPrompt += `[!] TITLE RULE: Slide titles must be bold, insightful "golden sentences" (maximum 8 words) that summarize the slide's insight, not just the topic.\n`;
+        }
+        
+        if (useTables) {
+            finalPrompt += `[!] DATA HANDLING: Do not summarize data casually. Precisely extract historical events, performance metrics, or clinical statistics from the sources. Synthesize and transform these data points into highly structured comparison Data Tables or distinct infographic bar charts before rendering.\n`;
+        }
+        
+        // 針對特殊風格附加強制排除規則，避免渲染崩潰
+        if (scenario === 'manga' |
+
+| scenario === 'retrogame') {
+            finalPrompt += `[!] EXCLUSION RULE: Complete exclusion of traditional Markdown formatting (no asterisks '**' or hashes '#').\n`;
+            finalPrompt += `[!] METAPHOR REQUIREMENT: Replace standard text with visual metaphors. Integrate necessary text strictly inside speech bubbles, thought clouds, or pixelated dialog boxes.\n`;
+        }
+
+        // 將組裝完成的字串寫入唯讀輸出區
+        document.getElementById('prompt-output').value = finalPrompt;
+    }
+
+    // 剪貼簿互動功能與視覺回饋
+    function copyPrompt() {
+        const outputTextarea = document.getElementById('prompt-output');
+        outputTextarea.select();
+        
+        try {
+            document.execCommand('copy');
+            const btn = document.querySelector('.btn-copy');
+            const originalText = btn.innerText;
+            
+            // 狀態變更動畫
+            btn.innerText = "已複製至剪貼簿！";
+            btn.style.backgroundColor = "#0F9D58"; // Google 成功綠色
+            btn.style.transform = "scale(1.05)";
+            
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.backgroundColor = "var(--secondary-accent)";
+                btn.style.transform = "scale(1)";
+            }, 2500);
+        } catch (err) {
+            alert('複製失敗，請手動全選複製。');
+        }
+    }
+
+    // 頁面載入時觸發初始化渲染
+    window.onload = generatePrompt;
+</script>
+
+</body>
+</html>
