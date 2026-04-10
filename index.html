@@ -1,395 +1,563 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NotebookLM 動態簡報指令生成器 · 修正版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+    <title>營養師亮亮AI探索研究成果</title>
+    <meta name="description" content="營養師亮亮AI探索研究成果彙整：AI藝術創作、自製網頁工具、AI人才前瞻、LLM/DS/Claude分析報告、AI工具比較平台、AI Orchestrator、AI工具入口導航、營養AI衛教研究、AI音樂生理研究、AI互動協議設計、AI安全決策樹、NotebookLM提示工程，以及網頁設計AI提示詞辭典與Gemini創意應用。">
+    
+    <meta property="og:title" content="營養師亮亮AI探索研究成果">
+    <meta property="og:description" content="亮亮營養師的AI研究成果：AI藝術創作、開發工具、人才趨勢、各類AI分析報告、AI Orchestrator、AI工具入口、營養AI衛教研究、AI音樂生理研究、AI互動協議設計、AI安全決策樹、NotebookLM提示工程與網頁設計AI提示詞實務。">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630/155f7a/ffffff?text=AI+Research+2026">
+    <meta property="og:image:alt" content="營養師亮亮AI探索研究成果">
+    <meta property="og:url" content="https://您的網址.com/此頁面.html">
+    <meta property="og:site_name" content="營養師亮亮AI研究室">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="營養師亮亮AI探索研究成果">
+    <meta name="twitter:description" content="亮亮營養師的AI研究成果：AI藝術創作、開發工具、人才趨勢與各類AI分析報告。">
+    <meta name="twitter:image" content="https://via.placeholder.com/1200x630/155f7a/ffffff?text=AI+Research+2026">
+    
     <style>
-        /* CSS 變數與全域樣式 */
-        :root {
-            --bg-color: #F8F9FA;
-            --card-bg: #FFFFFF;
-            --primary-accent: #202124;
-            --secondary-accent: #1A73E8;
-            --gray-band: #F1F3F4;
-            --text-main: #3C4043;
-            --text-muted: #5F6368;
-            --border-radius: 16px;
-            --transition-speed: 0.25s;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 40px 20px;
-            display: flex;
-            justify-content: center;
+            background: radial-gradient(circle at 10% 20%, #eef5fa, #d9e4ed);
+            font-family: 'Microsoft JhengHei', '微軟正黑體', 'PingFang SC', 'Helvetica Neue', 'Noto Sans TC', sans-serif;
+            color: #1a2f3f;
             line-height: 1.5;
+            padding: 2rem 1.5rem;
         }
 
         .container {
-            display: flex;
-            flex-direction: row;
-            width: 100%;
-            max-width: 1300px;
-            min-height: 80vh;
-            gap: 40px;
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .control-panel {
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .page-header h1 {
+            font-size: clamp(2rem, 8vw, 3.6rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #0f4c5f, #2b8fae, #6ec3d6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .subhead {
+            font-size: clamp(1rem, 4.5vw, 1.3rem);
+            color: #1e6a85;
+            background: rgba(255, 255, 250, 0.7);
+            backdrop-filter: blur(8px);
+            display: inline-block;
+            padding: 0.5rem 2rem;
+            border-radius: 60px;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        /* Google 搜尋框樣式 */
+        .search-container {
+            max-width: 500px;
+            margin: 1.2rem auto 0;
+            background: rgba(255, 255, 245, 0.8);
+            backdrop-filter: blur(8px);
+            border-radius: 60px;
+            padding: 0.3rem 0.3rem 0.3rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid rgba(43, 143, 174, 0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .search-container input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 0.6rem 0;
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+            color: #1a2f3f;
+        }
+        .search-container input::placeholder {
+            color: #8aaec0;
+        }
+        .search-container button {
+            background: #2b8fae;
+            border: none;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .search-container button:hover {
+            background: #0f4c5f;
+            transform: scale(0.97);
+        }
+        .search-note {
+            font-size: 0.7rem;
+            color: #5f8da3;
+            margin-top: 0.3rem;
+            text-align: center;
+        }
+
+        /* 快速連結區塊 */
+        .quick-links {
+            max-width: 1300px;
+            margin: 1.5rem auto 0;
+            background: rgba(255, 255, 245, 0.75);
+            backdrop-filter: blur(8px);
+            border-radius: 2rem;
+            padding: 1rem 1.5rem;
+            border: 1px solid rgba(43, 143, 174, 0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .link-group {
+            margin-bottom: 1rem;
+        }
+        .link-group-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #166079;
+            letter-spacing: 1px;
+            margin-bottom: 0.6rem;
+            padding-left: 0.3rem;
+            border-left: 3px solid #2b8fae;
+        }
+        .link-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            margin-bottom: 1rem;
+        }
+        .quick-link-btn {
+            background: rgba(43, 143, 174, 0.12);
+            border: none;
+            padding: 0.45rem 1.2rem;
+            border-radius: 40px;
+            font-size: clamp(0.75rem, 2.8vw, 0.9rem);
+            font-weight: 600;
+            color: #0f4c5f;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            backdrop-filter: blur(2px);
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        @media (max-width: 640px) {
+            .quick-link-btn {
+                white-space: normal;
+                word-break: keep-all;
+                padding: 0.35rem 1rem;
+            }
+        }
+        .quick-link-btn:hover {
+            background: #2b8fae;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(43,143,174,0.3);
+        }
+
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0 2rem;
+        }
+
+        .resource-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(6px);
+            border-radius: 2rem;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 0 15px 30px -12px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255,255,240,0.6);
+            display: flex;
+            flex-direction: column;
+            scroll-margin-top: 1.5rem;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 28px 40px -16px rgba(21, 95, 122, 0.3);
+        }
+
+        .card-content {
+            padding: 1.8rem 1.8rem 2rem;
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 24px;
-            padding-right: 20px;
-            border-right: 2px solid var(--gray-band);
         }
 
-        .header-section h1 {
-            font-size: 28px;
-            color: var(--primary-accent);
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
         }
 
-        .header-section p.subtitle {
-            font-size: 15px;
-            color: var(--text-muted);
-            margin-top: 0;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        label {
+        .badge-category {
+            display: inline-block;
+            background: rgba(43, 143, 174, 0.15);
+            font-size: 0.7rem;
+            padding: 0.25rem 0.9rem;
+            border-radius: 40px;
+            color: #166079;
             font-weight: 600;
-            font-size: 14px;
-            color: var(--primary-accent);
+            margin-bottom: 0.9rem;
+            width: fit-content;
         }
 
-        input[type="text"], 
-        input[type="number"], 
-        select {
-            padding: 14px;
-            border: 1.5px solid #DADCE0;
-            border-radius: 8px;
-            font-size: 15px;
-            color: var(--text-main);
-            background-color: #FFFFFF;
-            transition: border var(--transition-speed), box-shadow var(--transition-speed);
+        .site-title a {
+            font-size: clamp(1.25rem, 5vw, 1.75rem);
+            font-weight: 700;
+            color: #0f4c5f;
+            text-decoration: none;
+            transition: color 0.2s;
+            border-bottom: 2px solid transparent;
+            display: inline-block;
         }
 
-        input[type="text"]:focus, 
-        select:focus,
-        input[type="number"]:focus {
-            outline: none;
-            border-color: var(--secondary-accent);
-            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+        .site-title a:hover {
+            color: #2b8fae;
+            border-bottom-color: #2b8fae;
         }
 
-        .checkbox-group {
+        .description {
+            font-size: clamp(0.88rem, 3.2vw, 0.98rem);
+            color: #2b4b60;
+            margin: 0.7rem 0 1rem 0;
+            line-height: 1.55;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 0.5rem 0 1.5rem 0;
+        }
+
+        .feature-list li {
+            font-size: clamp(0.82rem, 3vw, 0.92rem);
+            margin-bottom: 0.6rem;
             display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            background-color: var(--gray-band);
-            padding: 16px;
-            border-radius: 8px;
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            margin-top: 2px;
-            cursor: pointer;
-            accent-color: var(--secondary-accent);
-        }
-
-        .checkbox-group label {
-            font-weight: 500;
-            cursor: pointer;
-            line-height: 1.4;
-        }
-
-        .output-panel {
-            flex: 1.2;
-            display: flex;
-            flex-direction: column;
-            background-color: #F8F9FA;
-            border-radius: 12px;
-            padding: 30px;
-            border: 1px solid #E8EAED;
-        }
-
-        .output-header {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #DADCE0;
+            gap: 0.6rem;
+            color: #255d77;
         }
 
-        .output-header h2 {
-            margin: 0;
-            font-size: 20px;
-            color: var(--primary-accent);
+        .feature-list li::before {
+            content: "🌟";
+            font-size: 0.85rem;
+            width: 1.4rem;
+            display: inline-block;
         }
 
-        .btn-copy {
-            background-color: var(--secondary-accent);
-            color: #FFFFFF;
+        .visit-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(95deg, #e1f0f6, #d2e6f0);
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #0f4c5f;
+            text-decoration: none;
+            transition: all 0.25s;
+        }
+
+        .visit-link:hover {
+            background: linear-gradient(95deg, #2b8fae, #226f8a);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .dev-date {
+            text-align: right;
+            font-size: 0.55rem;
+            color: #9bb7c9;
+            margin-top: 0.8rem;
+            letter-spacing: 0.3px;
+            opacity: 0.6;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 1.5rem;
+            background: #2b8fae;
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+            z-index: 1000;
+            opacity: 0.9;
             border: none;
-            padding: 10px 24px;
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: 600;
             cursor: pointer;
-            transition: background var(--transition-speed), transform 0.1s;
         }
 
-        .btn-copy:hover {
-            background-color: #1557B0;
+        .back-to-top:hover {
+            background: #0f4c5f;
+            transform: scale(1.08);
+            opacity: 1;
         }
 
-        .btn-copy:active {
-            transform: scale(0.97);
+        .main-footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding: 1.5rem 1rem;
+            border-top: 1px solid rgba(60, 110, 130, 0.2);
+            font-size: clamp(0.85rem, 3.5vw, 1rem);
+            font-weight: 500;
+            color: #2c7d9c;
+            background: rgba(255, 255, 250, 0.6);
+            border-radius: 2rem;
+            backdrop-filter: blur(4px);
         }
 
-        textarea#prompt-output {
-            flex-grow: 1;
-            width: 100%;
-            border: none;
-            background: transparent;
-            font-family: 'Consolas', 'Courier New', monospace;
-            font-size: 15px;
-            line-height: 1.7;
-            color: #202124;
-            resize: none;
-            outline: none;
-            white-space: pre-wrap;
+        .developer {
+            font-weight: 800;
+            background: linear-gradient(120deg, #166079, #2b8fae);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
         }
 
-        @media (max-width: 900px) {
-            .container {
-                flex-direction: column;
-                padding: 20px;
-            }
-            .control-panel {
-                border-right: none;
-                border-bottom: 2px solid var(--gray-band);
-                padding-right: 0;
-                padding-bottom: 30px;
-            }
+        .footer-contact {
+            margin-top: 0.6rem;
+            font-size: 0.9rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            align-items: center;
         }
+
+        .footer-contact a {
+            color: #1e6a85;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .footer-contact a:hover {
+            color: #0f4c5f;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 1.2rem; }
+            .card-content { padding: 1.4rem; }
+            .catalog-grid { gap: 1.3rem; }
+            .quick-links { padding: 0.8rem 1rem; }
+            .link-buttons { gap: 0.5rem; }
+            .quick-link-btn { padding: 0.35rem 0.8rem; font-size: 0.75rem; }
+            .back-to-top { bottom: 1.2rem; right: 1rem; width: 42px; height: 42px; font-size: 1.5rem; }
+            .footer-contact { gap: 0.8rem; flex-direction: column; }
+            .search-container { margin: 1rem auto 0; padding-left: 0.8rem; }
+            .search-container button { padding: 0.4rem 1rem; font-size: 0.8rem; }
+        }
+
+        a:focus-visible, button:focus-visible {
+            outline: 3px solid #2b8fae;
+            outline-offset: 4px;
+            border-radius: 12px;
+        }
+
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .resource-card {
+            animation: fadeSlideUp 0.5s ease backwards;
+        }
+        .resource-card:nth-child(1) { animation-delay: 0.05s; }
+        .resource-card:nth-child(2) { animation-delay: 0.1s; }
+        .resource-card:nth-child(3) { animation-delay: 0.15s; }
+        .resource-card:nth-child(4) { animation-delay: 0.2s; }
+        .resource-card:nth-child(5) { animation-delay: 0.25s; }
+        .resource-card:nth-child(6) { animation-delay: 0.3s; }
+        .resource-card:nth-child(7) { animation-delay: 0.35s; }
+        .resource-card:nth-child(8) { animation-delay: 0.4s; }
+        .resource-card:nth-child(9) { animation-delay: 0.45s; }
+        .resource-card:nth-child(10) { animation-delay: 0.5s; }
+        .resource-card:nth-child(11) { animation-delay: 0.55s; }
+        .resource-card:nth-child(12) { animation-delay: 0.6s; }
+        .resource-card:nth-child(13) { animation-delay: 0.65s; }
+        .resource-card:nth-child(14) { animation-delay: 0.7s; }
+        .resource-card:nth-child(15) { animation-delay: 0.75s; }
+        .resource-card:nth-child(16) { animation-delay: 0.8s; }
     </style>
 </head>
 <body>
-
 <div class="container">
-    <div class="control-panel">
-        <div class="header-section">
-            <h1>NotebookLM 指令生成核心</h1>
-            <p class="subtitle">基於 Nano Banana Pro 視覺模型架構，動態組裝最佳化提示詞</p>
+    <header class="page-header">
+        <h1>🍎 營養師亮亮AI探索研究成果</h1>
+        <div class="subhead">🔍 精選資源・前瞻分析・創意交匯</div>
+        
+        <!-- Google 搜尋框：自動限制搜尋範圍為當前網站 -->
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="🔎 搜尋本站相關內容 (AI、工具、研究報告...)" aria-label="搜尋關鍵字">
+            <button id="searchBtn">Google 搜尋</button>
         </div>
+        <div class="search-note">🔍 將自動加上「site:」限定在本網站內，精準找到相關資源</div>
+        
+        <div id="quickLinksContainer" class="quick-links">
+            <!-- 動態生成分組快速連結按鈕 -->
+        </div>
+    </header>
 
-        <div class="form-group">
-            <label for="input-topic">專案核心主題 (Core Topic)</label>
-            <input type="text" id="input-topic" placeholder="例如：2026年全球供應鏈重組之影響與對策" oninput="generatePrompt()">
-        </div>
+    <main>
+        <div id="cardsContainer" class="catalog-grid" aria-label="AI研究成果與工具目錄"></div>
+    </main>
 
-        <div class="form-group">
-            <label for="select-scenario">目標情境與模板策略 (Scenario & Template Style)</label>
-            <select id="select-scenario" onchange="generatePrompt()">
-                <option value="corporate">董事會級極簡企業簡報 (高端/冷靜/極簡數據)</option>
-                <option value="retrogame">像素復古遊戲新手教學 (闖關感/升級/低認知阻力)</option>
-                <option value="academic">黑板老師知識整理風格 (親切/手繪/步驟拆解)</option>
-                <option value="manga">動態漫畫分鏡敘事簡報 (高對比/英雄之旅/網點)</option>
-                <option value="infographic">資訊圖表報告風格 (分割對比/物理機制隱喻)</option>
-                <option value="uidemo">UI/App 設計展示風 (介面操作/玻璃擬物化/高解析)</option>
-                <option value="claymation">黏土定格動畫簡報 (立體感/趣味性/實體材質)</option>
-            </select>
+    <footer class="main-footer">
+        <div class="developer">營養師 李亮頡 研究開發 2026</div>
+        <div class="footer-contact">
+            <span>📧 <a href="mailto:s8762999999@gmail.com">s8762999999@gmail.com</a></span>
+            <span>📷 <a href="https://www.instagram.com/son_win_lee?igsh=MWZuaG85d2drcnJjMg%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer">Instagram</a></span>
         </div>
-
-        <div class="form-group">
-            <label for="input-audience">預設受眾分析 (Target Audience)</label>
-            <input type="text" id="input-audience" placeholder="例如：高階經理人、潛在投資方" oninput="generatePrompt()">
-        </div>
-
-        <div class="form-group">
-            <label for="input-slides">系統輸出頁數限制 (Max Slides Allocation)</label>
-            <input type="number" id="input-slides" value="12" min="5" max="30" oninput="generatePrompt()">
-        </div>
-
-        <div class="checkbox-group">
-            <input type="checkbox" id="check-strict" checked onchange="generatePrompt()">
-            <label for="check-strict">
-                啟動極限文字約束條件<br>
-                <span style="font-size: 13px; font-weight: normal; color: var(--text-muted);">強制防止文字牆生成，限制標題字數與每頁最多4點條列，確保高資訊對比度。</span>
-            </label>
-        </div>
-
-        <div class="checkbox-group">
-            <input type="checkbox" id="check-tables" onchange="generatePrompt()">
-            <label for="check-tables">
-                啟動數據強制結構化處理<br>
-                <span style="font-size: 13px; font-weight: normal; color: var(--text-muted);">指示 AI 在渲染前，精確擷取文獻數據並轉換為對比矩陣或臨床統計表格。</span>
-            </label>
-        </div>
-    </div>
-
-    <div class="output-panel">
-        <div class="output-header">
-            <h2>生成的最佳化提示詞 (Optimized Prompt)</h2>
-            <button class="btn-copy" onclick="copyPrompt()">一鍵複製指令</button>
-        </div>
-        <textarea id="prompt-output" readonly></textarea>
-    </div>
+    </footer>
 </div>
 
+<button class="back-to-top" id="backToTopBtn" aria-label="回到頂部">↑</button>
+
 <script>
-    // ---------- 修正所有語法錯誤 (|| 取代錯誤的 | 斷行) ----------
-    // 模板字典 (完全保留原始設計)
-    const templates = {
-        corporate: {
-            role: "Create a professional, executive-level slide deck optimized for absolute clarity, visual impact, and high-stakes persuasion.",
-            style: "Tone & style: Modern, minimalist, high-end corporate. Confident and highly authoritative. Visual Identity: Use a sharp, crisp white background with 'Business Red' title accents. Maintain substantial, purposeful white space. Absolutely no decorative or unnecessary visual elements—every pixel must carry informational value.",
-            structure: "Follow a strict logical narrative flow: Shocking Fact/Problem -> Industry Context -> Proposed Solution -> Empirical Evidence -> Call to Action. Include a mandatory Title slide, Agenda, and explicit Conclusion slide."
-        },
-        retrogame: {
-            role: "Design an engaging, gamified educational presentation designed to drastically lower initial cognitive resistance for beginners.",
-            style: "Tone & Style: Fun, rewarding, and encouraging. Visual Identity: 8-bit retro pixel video game aesthetic. Integrate classic UI elements such as 'HP/MP status bars', 'Level Up' notifications, and 'Insert Coin' visual metaphors to simulate a role-playing game progression.",
-            structure: "Narrative flow must feel like unlocking stages. Progress from 'Level 1: The Basics' to 'Boss Battle: Complex Integration'. Use step-by-step guidance."
-        },
-        academic: {
-            role: "Develop a structured educational presentation optimized for cognitive retention and rigorous logical deduction.",
-            style: "Tone & Style: Calm, professional, credible, and pedagogical. Visual Identity: Professional sketch-noting aesthetic simulating a deep green classroom blackboard. Use white, yellow, and pink handwritten chalk-style fonts. Include minimalist hand-drawn icons and organic arrow connectors.",
-            structure: "Sequential presentation: Concept Definition -> Underlying Mechanism -> Step-by-Step Breakdown -> Practical Application -> Summary. Every slide title must serve a guiding, interrogative function."
-        },
-        manga: {
-            role: "Act as a top art director generating a visually focused, high-sensibility presentation slide deck that sparks emotional resonance.",
-            style: "Tone: Energetic, expressive, and highly narrative-driven. Visual Identity: Modern Japanese manga aesthetics. Background Color: Pure White. Text Color: Black. Use traditional ink drawing techniques with halftone screentones for shading. Include crisp line weights (G-pen) and dynamic comic paneling with diagonal cuts. Use dramatic impact bursts for emphasis.",
-            structure: "Map the content to a Hero's Journey: The Chaos/Problem -> The Struggle -> The Discovery/Solution -> The Transformation."
-        },
-        infographic: {
-            role: "Design a scannable, highly visual presentation focused on comparative analysis, physical metaphors, and data storytelling.",
-            style: "Visual Identity: Information graphic aesthetic using physical metaphors (e.g., funnels, seesaws). Split-screen comparison layout. Use contrasting colors for each option. Focus on visual hierarchy: render key numbers in extremely large typography wrapped in clean geometric frames.",
-            structure: "Matrix comparison and feature alignment. Translate all abstract relationships into spatial proportions."
-        },
-        uidemo: {
-            role: "Generate a sleek, modern presentation focused on digital product showcasing and user experience flow.",
-            style: "Tone & Style: Cutting-edge, innovative, and user-centric. Visual Identity: 'Split UI' design layout. Feature high-resolution mobile phone or browser window mockups displaying interfaces. Ensure realistic screen reflections and a premium glassmorphism feel.",
-            structure: "Focus purely on demonstrating functionality through a visual UI sequence, leading the user through a digital journey."
-        },
-        claymation: {
-            role: "Create a charming and approachable presentation using physical stop-motion animation aesthetics.",
-            style: "Tone & Style: Playful, tactile, and highly memorable. Visual Identity: 3D claymation style. Elements should appear to be sculpted from modeling clay with visible fingerprint textures, soft diffuse studio lighting, and realistic depth of field creating a miniature diorama effect.",
-            structure: "Tell a grounded story by moving 'clay figures' through different scenes to explain abstract processes."
-        }
-    };
+    // ============================================================
+    // 卡片資料陣列 (共16個，完整保留之前所有內容)
+    // ============================================================
+    const sitesData = [
+        { title: "營養師亮亮 · AI作品探索天地", url: "https://htmlpreview.github.io/?https://raw.githubusercontent.com/s8762999999-design/winson.dietition.lee.github.io/d751e253049c54ff7c5fb9eb6ce2793cd6eaab21/%E7%87%9F%E9%A4%8A%E5%B8%AB%E4%BA%AE%E4%BA%AE%E7%9A%84AI%E4%BD%9C%E5%93%81%E6%8E%A2%E7%B4%A2%E5%A4%A9%E5%9C%B0", description: "結合人工智慧與營養美學的互動展示空間，亮亮營養師生成AI繪圖、創意食譜及數位藝術作品，探索科技與健康的交匯點。", features: ["AI生成圖像藝廊", "營養知識跨界融合", "互動式作品體驗"], icon: "🎨✨", category: "🎭 AI創作", group: "創作與工具" },
+        { title: "自製網頁DIY工具包", url: "https://htmlpreview.github.io/?https://gist.githubusercontent.com/s8762999999-design/c0c9bfbfeebf14638d477863302a59a4/raw/8cb1681bbe47e805d12a91fa2517722b7604da33/%25E8%2587%25AA%25E8%25A3%25BD%25E7%25B6%25B2%25E9%25A0%2581DIY%25E5%25B7%25A5%25E5%2585%25B7", description: "收錄前端常用程式碼片段、版型模板與輕量框架，加速自製網頁流程。包含HTML/CSS結構、響應式佈局範例，適合開發者與設計師直接取用。", features: ["複製貼上即可使用", "輕量化開發懶人包", "適合初學者與接案者"], icon: "🛠️🧩", category: "🔧 開發輔助", group: "創作與工具" },
+        { title: "AI人才研究2026", url: "https://htmlpreview.github.io/?https://gist.githubusercontent.com/s8762999999-design/21c01e2187e67b6306ff3ce3c831d634/raw/184b7996c85393c0c573092cf0cddd03f45bc897/gistfile1.txt", description: "探索AI領域人才趨勢、技能地圖與未來發展研究。透過即時預覽工具展示互動報告，提供2026年人工智慧人才培育關鍵洞察與學習資源。", features: ["AI人才需求分析", "技能樹圖譜預覽", "前瞻研究與職涯建議"], icon: "🤖📈", category: "📊 前瞻研究", group: "研究報告" },
+        { title: "LLM對傳統程式設計師與AI程式設計的分析研究報告", url: "https://htmlpreview.github.io/?https://gist.githubusercontent.com/s8762999999-design/2fe4194c6fc53747843e4015c9e0e768/raw/b4eb70c42fc59259cbe03fd64f867ed9a53e0a71/DeepSeek%25E5%25B0%258D%25E6%2596%25BC%25E5%2582%25B3%25E7%25B5%25B1%25E7%25A8%258B%25E5%25BC%258F%25E8%25A8%25AD%25E8%25A8%2588%25E5%25B8%25AB%25E8%2588%2587AI%25E5%259F%258E%25E5%25B8%2582%25E6%2598%25AF%25E6%258A%2580%25E5%25B8%25AB%25E7%259A%2584%25E5%2588%2586%25E6%259E%2590%25E7%25A0%2594%25E7%25A9%25B6%25E5%25A0%25B1%25E5%2591%258A", description: "LLM 深入剖析 AI 時代下傳統程式設計師與 AI 城市技師的角色轉變、技能重組與未來職涯路徑，提供數據驅動的趨勢洞察。", features: ["職業轉型分析", "AI城市技師需求預測", "技能樹進化建議"], icon: "🧠📊", category: "📑 深度報告", group: "研究報告" },
+        { title: "DS研究與AI工具分析2.0", url: "https://htmlpreview.github.io/?https://gist.githubusercontent.com/s8762999999-design/ae5b6b3f2296c0c43b112889628c2800/raw/d341eea9a799b3984f2e191d030439a453af30ae/DS%25E7%25A0%2594%25E7%25A9%25B6%25E4%25B9%258BAI%25E5%25B7%25A5%25E5%2585%25B7%25E5%2588%2586%25E6%259E%25902.0", description: "深度探討數據科學(DS)與AI工具的整合應用，提供進階分析工作流程、自動化實務與案例研究，協助開發者提升AI專案效率。", features: ["DS與AI工具整合", "自動化工作流程", "實戰案例剖析"], icon: "📊⚙️", category: "🔬 數據科學", group: "研究報告" },
+        { title: "Claude研究與AI工具分析2.0", url: "https://htmlpreview.github.io/?https://gist.githubusercontent.com/s8762999999-design/4db7ee830671ad37d91fff56da5f9d77/raw/0d28c8015adefaa54e055f9c642b76fdc8c6eff9/CLAUDE%25E7%25A0%2594%25E7%25A9%25B6%25E4%25B9%258BAI%25E5%25B7%25A5%25E5%2585%25B7%25E5%2588%2586%25E6%259E%25902.0", description: "聚焦Claude模型特性與AI工具鏈的協同應用，深入比較不同LLM在程式輔助、內容生成與推理能力的表現，提供實用評估報告。", features: ["Claude模型評測", "多LLM效能比較", "實務應用指南"], icon: "🤖🔍", category: "🧪 模型研究", group: "研究報告" },
+        { title: "AI工具綜合比較平台", url: "https://aitoolscomp-jaruvq4t.manus.space/?utm_id=97758_v0_s00_e0_tv0", description: "一站式AI工具評測與比較平台，收錄主流人工智慧服務，提供效能數據、價格對比與使用場景建議，幫助開發者與企業快速選型。", features: ["多維度工具評測", "即時效能對比", "應用場景推薦"], icon: "⚖️🤖", category: "🔎 工具評測", group: "平台與對話" },
+        { title: "Gemini AI 創意應用分享", url: "https://gemini.google.com/share/1a1bb2e33fc4", description: "展示 Gemini 在創意寫作、詩詞生成與故事發想上的驚人能力。透過實際對話案例，體驗 AI 如何激發靈感並協助藝術創作。", features: ["創意寫作實例", "詩詞對聯生成", "靈感啟發對話"], icon: "✍️✨", category: "💬 對話式AI", group: "平台與對話" },
+        { title: "網頁設計與 AI 提示詞終極實務大辭典", url: "https://g.co/gemini/share/807a938f8995", description: "集結網頁設計領域最實用的 AI 提示詞範例與實戰技巧，從版型生成、CSS 優化到互動效果，幫助設計師與開發者快速產出高品質程式碼。", features: ["提示詞百科全書", "響應式版型生成", "CSS/JS 優化技巧"], icon: "📚💡", category: "💬 對話式AI", group: "平台與對話", showDevDate: true },
+        { title: "AI Orchestrator · 智能工作流協調平台", url: "https://s8762999999-design.github.io/ai-orchestrator/", description: "整合多種 AI 模型與服務的工作流編排工具，支援自定義任務鏈、跨平台 API 串接，實現複雜自動化流程。適合開發者構建 AI 應用生態。", features: ["多模型協同編排", "可視化工作流設計", "API 整合與監控"], icon: "🎼⚙️", category: "🔧 開發輔助", group: "平台與對話", showDevDate: true },
+        { title: "AI 工具入口 · 一站式 AI 服務導航", url: "https://s8762999999-design.github.io/AI-.port/", description: "匯集 Gmail、Gemini、ChatGPT、Claude、DeepSeek、Perplexity 等主流 AI 服務的快速啟動入口，提供一鍵打開全部工具的便捷體驗，大幅提升工作效率。", features: ["主流 AI 工具整合", "一鍵快速啟動", "直覺化導航面板"], icon: "🚀🔗", category: "🔎 工具評測", group: "平台與對話", showDevDate: true },
+        { title: "營養AI衛教研究", url: "https://s8762999999-design.github.io/-/", description: "運用 AI 技術發展個人化營養衛教內容與互動式學習工具，提供飲食建議、食材分析與健康識能提升的創新研究平台。", features: ["AI營養衛教研究", "飲食選擇互動", "實證衛教素材生成"], icon: "🥗🤖", category: "🔬 數據科學", group: "平台與對話", showDevDate: true },
+        { title: "AI深度研究音樂與生理狀態的相互影響", url: "https://s8762999999-design.github.io/DC-collection-physical-music-study-hub/#top", description: "整合實體音樂專輯收藏、樂理研究與學習資源的數位中心，提供深度音樂知識與實體載體探索體驗，支援收藏管理與互動學習。", features: ["AI針對音樂與生理影響之深度研究", "假設狀況相對應之音樂應用", "實體資源導覽"], icon: "🎵📀", category: "🎵 音樂研究", group: "平台與對話", showDevDate: true },
+        { title: "頂級機密 AI 互動協議設計研究", url: "https://ilvsilc.github.io/Top-Secret-AI-Interaction-Protocol-Design/", description: "深度探討 AI 與人類之間的安全互動協議架構，設計高強度加密通訊、權限驗證與行為監控機制，確保機密任務中的 AI 協作可靠度。", features: ["安全協議架構", "加密通訊設計", "行為監控與驗證"], icon: "🔒🤖", category: "📑 深度報告", group: "研究報告", showDevDate: true },
+        { title: "AI安全決策樹 · 風險評估框架", url: "https://s8762999999-design.github.io/AI-Safety-Decision-Tree/", description: "提供 AI 系統安全風險的結構化決策流程，協助開發者識別潛在危害、評估嚴重程度並制定對應緩解策略，落實負責任的人工智慧。", features: ["風險識別與分類", "決策路徑分析", "安全控制建議"], icon: "🌳⚠️", category: "📑 深度報告", group: "研究報告", showDevDate: true },
+        { title: "NotebookLM 結構化提示工程研究", url: "https://s8762999999-design.github.io/-NotebookLM-structure-prompt/", description: "探索 NotebookLM 的提示結構化方法，設計高效的文件分析與知識整理框架，提升 AI 輔助研究的準確性與深度，實現精準資訊萃取。", features: ["提示結構設計", "知識框架整理", "研究效率提升"], icon: "📓🔧", category: "📑 深度報告", group: "研究報告", showDevDate: true }
+    ];
 
-    // 核心生成函數 —— 已修正 || 運算符
-    function generatePrompt() {
-        // 正確使用 || 作為預設值 (而非 | |)
-        const topic = document.getElementById('input-topic').value || "[在此輸入您的核心主題]";
-        const scenario = document.getElementById('select-scenario').value;
-        const audience = document.getElementById('input-audience').value || "[明確定義目標受眾]";
-        const slides = document.getElementById('input-slides').value;
-        const useStrictText = document.getElementById('check-strict').checked;
-        const useTables = document.getElementById('check-tables').checked;
-
-        const baseTpl = templates[scenario];
-
-        // 組裝提示詞 (保持原有的專業排版)
-        let finalPrompt = `${baseTpl.role}\n\n`;
+    function generateCards() {
+        const container = document.getElementById('cardsContainer');
+        if (!container) return;
+        container.innerHTML = '';
         
-        finalPrompt += `--- ---\n`;
-        finalPrompt += `> Topic & Objective: Analyze the uploaded sources to create a highly tailored deck specifically about "${topic}".\n`;
-        finalPrompt += `> Target Audience: ${audience}\n`;
-        finalPrompt += `> Length constraint: Generate exactly ${slides} slides.\n\n`;
-        
-        finalPrompt += `--- ---\n`;
-        finalPrompt += `> Design Identity: ${baseTpl.style}\n\n`;
-        finalPrompt += `> Narrative Structure: ${baseTpl.structure}\n\n`;
-
-        finalPrompt += `--- ---\n`;
-        
-        if (useStrictText) {
-            finalPrompt += `[!] TEXT LIMITATION: You must prevent visual overcrowding. Maximum 4 bullet points per slide. Each bullet must be <= 12 words, phrased as complete, punchy ideas. Avoid large blocks of text.\n`;
-            finalPrompt += `[!] TITLE RULE: Slide titles must be bold, insightful "golden sentences" (maximum 8 words) that summarize the slide's insight, not just the topic.\n`;
-        }
-        
-        if (useTables) {
-            finalPrompt += `[!] DATA HANDLING: Do not summarize data casually. Precisely extract historical events, performance metrics, or clinical statistics from the sources. Synthesize and transform these data points into highly structured comparison Data Tables or distinct infographic bar charts before rendering.\n`;
-        }
-        
-        // 修正條件判斷：使用正確的 || 
-        if (scenario === 'manga' || scenario === 'retrogame') {
-            finalPrompt += `[!] EXCLUSION RULE: Complete exclusion of traditional Markdown formatting (no asterisks '**' or hashes '#').\n`;
-            finalPrompt += `[!] METAPHOR REQUIREMENT: Replace standard text with visual metaphors. Integrate necessary text strictly inside speech bubbles, thought clouds, or pixelated dialog boxes.\n`;
-        }
-
-        // 寫入輸出區
-        document.getElementById('prompt-output').value = finalPrompt;
-    }
-
-    // 複製功能 (保留視覺回饋)
-    function copyPrompt() {
-        const outputTextarea = document.getElementById('prompt-output');
-        outputTextarea.select();
-        
-        try {
-            // 使用現代 Clipboard API 作為優先，並保留 execCommand 備援
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(outputTextarea.value).then(() => {
-                    showCopyFeedback();
-                }).catch(() => {
-                    fallbackCopy();
-                });
-            } else {
-                fallbackCopy();
+        sitesData.forEach((item, idx) => {
+            const card = document.createElement('article');
+            card.className = 'resource-card';
+            card.id = `card-${idx}`;
+            card.setAttribute('aria-label', `網站卡片：${item.title}`);
+            const featuresHtml = item.features.map(f => `<li>${escapeHtml(f)}</li>`).join('');
+            let cardInnerHtml = `<div class="card-content"><div class="card-icon">${item.icon || '🔖'}</div><div class="badge-category">${escapeHtml(item.category)}</div><div class="site-title"><a href="${item.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a></div><div class="description">${escapeHtml(item.description)}</div><ul class="feature-list">${featuresHtml}</ul><div class="card-footer"><a href="${item.url}" target="_blank" rel="noopener noreferrer" class="visit-link">前往探索 <span>→</span></a></div>`;
+            if (item.showDevDate) {
+                let dateLabel = "📅 2026/04/07";
+                if (["AI 工具入口 · 一站式 AI 服務導航", "營養AI衛教研究", "AI深度研究音樂與生理狀態的相互影響"].includes(item.title)) dateLabel = "📅 2026/04/08";
+                if (["頂級機密 AI 互動協議設計研究", "AI安全決策樹 · 風險評估框架"].includes(item.title)) dateLabel = "📅 2026/04/09";
+                if (item.title === "NotebookLM 結構化提示工程研究") dateLabel = "📅 2026/04/10";
+                cardInnerHtml += `<div class="dev-date">${dateLabel}</div>`;
             }
-        } catch (err) {
-            alert('複製失敗，請手動全選複製 (Ctrl/Cmd+C)。');
-        }
+            cardInnerHtml += `</div>`;
+            card.innerHTML = cardInnerHtml;
+            container.appendChild(card);
+        });
     }
-
-    function fallbackCopy() {
-        const outputTextarea = document.getElementById('prompt-output');
-        outputTextarea.select();
-        const successful = document.execCommand('copy');
-        if (successful) {
-            showCopyFeedback();
-        } else {
-            alert('自動複製失敗，請手動複製。');
-        }
+    
+    function generateQuickLinks() {
+        const container = document.getElementById('quickLinksContainer');
+        if (!container) return;
+        container.innerHTML = '';
+        const groupOrder = [{ key: "創作與工具", label: "🎨 創作與工具" }, { key: "研究報告", label: "📄 研究報告" }, { key: "平台與對話", label: "💬 平台與對話" }];
+        const groups = {};
+        sitesData.forEach((item, idx) => { const g = item.group || "其他"; if (!groups[g]) groups[g] = []; groups[g].push({ ...item, originalIndex: idx }); });
+        groupOrder.forEach(groupInfo => {
+            const items = groups[groupInfo.key];
+            if (!items || items.length === 0) return;
+            const groupDiv = document.createElement('div'); groupDiv.className = 'link-group';
+            const titleDiv = document.createElement('div'); titleDiv.className = 'link-group-title'; titleDiv.textContent = groupInfo.label; groupDiv.appendChild(titleDiv);
+            const buttonsDiv = document.createElement('div'); buttonsDiv.className = 'link-buttons';
+            items.forEach(item => {
+                const btn = document.createElement('button'); btn.textContent = item.title; btn.className = 'quick-link-btn'; btn.setAttribute('data-target-idx', item.originalIndex);
+                btn.addEventListener('click', (e) => { e.preventDefault(); const targetCard = document.getElementById(`card-${item.originalIndex}`); if (targetCard) { targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' }); targetCard.style.transition = 'box-shadow 0.2s'; targetCard.style.boxShadow = '0 0 0 3px #2b8fae'; setTimeout(() => { targetCard.style.boxShadow = ''; }, 1000); } });
+                buttonsDiv.appendChild(btn);
+            });
+            groupDiv.appendChild(buttonsDiv); container.appendChild(groupDiv);
+        });
     }
-
-    function showCopyFeedback() {
-        const btn = document.querySelector('.btn-copy');
-        const originalText = btn.innerText;
-        btn.innerText = "✓ 已複製至剪貼簿！";
-        btn.style.backgroundColor = "#0F9D58";
-        btn.style.transform = "scale(1.02)";
-        
-        setTimeout(() => {
-            btn.innerText = originalText;
-            btn.style.backgroundColor = "var(--secondary-accent)";
-            btn.style.transform = "scale(1)";
-        }, 2000);
+    
+    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
+    
+    function initBackToTop() { const backBtn = document.getElementById('backToTopBtn'); if (backBtn) backBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); }); }
+    
+    function initSearch() {
+        const searchBtn = document.getElementById('searchBtn');
+        const searchInput = document.getElementById('searchInput');
+        const performSearch = () => {
+            let query = searchInput.value.trim();
+            if (query === "") return;
+            // 取得目前網站的域名（不含 protocol 和 path）
+            let hostname = window.location.hostname;
+            // 如果是 GitHub Pages 子目錄部署，使用 site: 整個域名即可精準
+            const siteQuery = `site:${hostname}`;
+            const finalQuery = `${query} ${siteQuery}`;
+            const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(finalQuery)}`;
+            window.open(googleUrl, '_blank');
+        };
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(); });
     }
-
-    // 初始化
-    window.onload = generatePrompt;
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        generateCards();
+        generateQuickLinks();
+        initBackToTop();
+        initSearch();
+    });
 </script>
-
 </body>
 </html>
