@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NotebookLM 動態簡報指令生成器 (Interactive Prompt Builder)</title>
+    <title>NotebookLM 動態簡報指令生成器 · 修正版</title>
     <style>
-        /* CSS 變數定義與全域樣式設定 */
+        /* CSS 變數與全域樣式 */
         :root {
             --bg-color: #F8F9FA;
             --card-bg: #FFFFFF;
-            --primary-accent: #202124; /* Google 深灰色系 */
-            --secondary-accent: #1A73E8; /* Google 藍色系 */
+            --primary-accent: #202124;
+            --secondary-accent: #1A73E8;
             --gray-band: #F1F3F4;
             --text-main: #3C4043;
             --text-muted: #5F6368;
@@ -29,7 +29,7 @@
             line-height: 1.5;
         }
 
-      .container {
+        .container {
             display: flex;
             flex-direction: row;
             width: 100%;
@@ -42,8 +42,7 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.08);
         }
 
-        /* 左側控制面板樣式 */
-      .control-panel {
+        .control-panel {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -52,20 +51,20 @@
             border-right: 2px solid var(--gray-band);
         }
 
-      .header-section h1 {
+        .header-section h1 {
             font-size: 28px;
             color: var(--primary-accent);
             margin-bottom: 8px;
             letter-spacing: -0.5px;
         }
 
-      .header-section p.subtitle {
+        .header-section p.subtitle {
             font-size: 15px;
             color: var(--text-muted);
             margin-top: 0;
         }
 
-      .form-group {
+        .form-group {
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -97,7 +96,7 @@
             box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
         }
 
-      .checkbox-group {
+        .checkbox-group {
             display: flex;
             align-items: flex-start;
             gap: 12px;
@@ -106,7 +105,7 @@
             border-radius: 8px;
         }
 
-      .checkbox-group input[type="checkbox"] {
+        .checkbox-group input[type="checkbox"] {
             width: 20px;
             height: 20px;
             margin-top: 2px;
@@ -114,14 +113,13 @@
             accent-color: var(--secondary-accent);
         }
 
-      .checkbox-group label {
+        .checkbox-group label {
             font-weight: 500;
             cursor: pointer;
             line-height: 1.4;
         }
 
-        /* 右側輸出預覽區樣式 */
-      .output-panel {
+        .output-panel {
             flex: 1.2;
             display: flex;
             flex-direction: column;
@@ -131,7 +129,7 @@
             border: 1px solid #E8EAED;
         }
 
-      .output-header {
+        .output-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -140,13 +138,13 @@
             border-bottom: 1px solid #DADCE0;
         }
 
-      .output-header h2 {
+        .output-header h2 {
             margin: 0;
             font-size: 20px;
             color: var(--primary-accent);
         }
 
-      .btn-copy {
+        .btn-copy {
             background-color: var(--secondary-accent);
             color: #FFFFFF;
             border: none;
@@ -158,11 +156,11 @@
             transition: background var(--transition-speed), transform 0.1s;
         }
 
-      .btn-copy:hover {
+        .btn-copy:hover {
             background-color: #1557B0;
         }
 
-      .btn-copy:active {
+        .btn-copy:active {
             transform: scale(0.97);
         }
 
@@ -180,13 +178,12 @@
             white-space: pre-wrap;
         }
 
-        /* 響應式佈局調整 */
         @media (max-width: 900px) {
-          .container {
+            .container {
                 flex-direction: column;
                 padding: 20px;
             }
-          .control-panel {
+            .control-panel {
                 border-right: none;
                 border-bottom: 2px solid var(--gray-band);
                 padding-right: 0;
@@ -259,7 +256,8 @@
 </div>
 
 <script>
-    // 基礎模板物件字典 (Template Dictionary Array)
+    // ---------- 修正所有語法錯誤 (|| 取代錯誤的 | 斷行) ----------
+    // 模板字典 (完全保留原始設計)
     const templates = {
         corporate: {
             role: "Create a professional, executive-level slide deck optimized for absolute clarity, visual impact, and high-stakes persuasion.",
@@ -298,39 +296,30 @@
         }
     };
 
-    // 核心處理邏輯：動態組裝與疊加提示詞字串
+    // 核心生成函數 —— 已修正 || 運算符
     function generatePrompt() {
-        // 修復了雙直線 |
-
-| 被截斷的語法錯誤
-        const topic = document.getElementById('input-topic').value |
-
-| "[在此輸入您的核心主題]";
+        // 正確使用 || 作為預設值 (而非 | |)
+        const topic = document.getElementById('input-topic').value || "[在此輸入您的核心主題]";
         const scenario = document.getElementById('select-scenario').value;
-        const audience = document.getElementById('input-audience').value |
-
-| "[明確定義目標受眾]";
+        const audience = document.getElementById('input-audience').value || "[明確定義目標受眾]";
         const slides = document.getElementById('input-slides').value;
         const useStrictText = document.getElementById('check-strict').checked;
         const useTables = document.getElementById('check-tables').checked;
 
         const baseTpl = templates[scenario];
 
-        // 第一層：角色與核心任務設定
+        // 組裝提示詞 (保持原有的專業排版)
         let finalPrompt = `${baseTpl.role}\n\n`;
         
-        // 第二層：任務參數注入
         finalPrompt += `--- ---\n`;
         finalPrompt += `> Topic & Objective: Analyze the uploaded sources to create a highly tailored deck specifically about "${topic}".\n`;
         finalPrompt += `> Target Audience: ${audience}\n`;
         finalPrompt += `> Length constraint: Generate exactly ${slides} slides.\n\n`;
         
-        // 第三層：視覺與敘事骨架
         finalPrompt += `--- ---\n`;
         finalPrompt += `> Design Identity: ${baseTpl.style}\n\n`;
         finalPrompt += `> Narrative Structure: ${baseTpl.structure}\n\n`;
 
-        // 第四層：條件式極限約束 (Conditional Limiters)
         finalPrompt += `--- ---\n`;
         
         if (useStrictText) {
@@ -342,44 +331,63 @@
             finalPrompt += `[!] DATA HANDLING: Do not summarize data casually. Precisely extract historical events, performance metrics, or clinical statistics from the sources. Synthesize and transform these data points into highly structured comparison Data Tables or distinct infographic bar charts before rendering.\n`;
         }
         
-        // 針對特殊風格附加強制排除規則，避免渲染崩潰
-        if (scenario === 'manga' |
-
-| scenario === 'retrogame') {
+        // 修正條件判斷：使用正確的 || 
+        if (scenario === 'manga' || scenario === 'retrogame') {
             finalPrompt += `[!] EXCLUSION RULE: Complete exclusion of traditional Markdown formatting (no asterisks '**' or hashes '#').\n`;
             finalPrompt += `[!] METAPHOR REQUIREMENT: Replace standard text with visual metaphors. Integrate necessary text strictly inside speech bubbles, thought clouds, or pixelated dialog boxes.\n`;
         }
 
-        // 將組裝完成的字串寫入唯讀輸出區
+        // 寫入輸出區
         document.getElementById('prompt-output').value = finalPrompt;
     }
 
-    // 剪貼簿互動功能與視覺回饋
+    // 複製功能 (保留視覺回饋)
     function copyPrompt() {
         const outputTextarea = document.getElementById('prompt-output');
         outputTextarea.select();
         
         try {
-            document.execCommand('copy');
-            const btn = document.querySelector('.btn-copy');
-            const originalText = btn.innerText;
-            
-            // 狀態變更動畫
-            btn.innerText = "已複製至剪貼簿！";
-            btn.style.backgroundColor = "#0F9D58"; // Google 成功綠色
-            btn.style.transform = "scale(1.05)";
-            
-            setTimeout(() => {
-                btn.innerText = originalText;
-                btn.style.backgroundColor = "var(--secondary-accent)";
-                btn.style.transform = "scale(1)";
-            }, 2500);
+            // 使用現代 Clipboard API 作為優先，並保留 execCommand 備援
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(outputTextarea.value).then(() => {
+                    showCopyFeedback();
+                }).catch(() => {
+                    fallbackCopy();
+                });
+            } else {
+                fallbackCopy();
+            }
         } catch (err) {
-            alert('複製失敗，請手動全選複製。');
+            alert('複製失敗，請手動全選複製 (Ctrl/Cmd+C)。');
         }
     }
 
-    // 頁面載入時觸發初始化渲染
+    function fallbackCopy() {
+        const outputTextarea = document.getElementById('prompt-output');
+        outputTextarea.select();
+        const successful = document.execCommand('copy');
+        if (successful) {
+            showCopyFeedback();
+        } else {
+            alert('自動複製失敗，請手動複製。');
+        }
+    }
+
+    function showCopyFeedback() {
+        const btn = document.querySelector('.btn-copy');
+        const originalText = btn.innerText;
+        btn.innerText = "✓ 已複製至剪貼簿！";
+        btn.style.backgroundColor = "#0F9D58";
+        btn.style.transform = "scale(1.02)";
+        
+        setTimeout(() => {
+            btn.innerText = originalText;
+            btn.style.backgroundColor = "var(--secondary-accent)";
+            btn.style.transform = "scale(1)";
+        }, 2000);
+    }
+
+    // 初始化
     window.onload = generatePrompt;
 </script>
 
