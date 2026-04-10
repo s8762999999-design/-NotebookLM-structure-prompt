@@ -29,7 +29,7 @@
             line-height: 1.5;
         }
 
-       .container {
+      .container {
             display: flex;
             flex-direction: row;
             width: 100%;
@@ -43,7 +43,7 @@
         }
 
         /* 左側控制面板樣式 */
-       .control-panel {
+      .control-panel {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -52,20 +52,20 @@
             border-right: 2px solid var(--gray-band);
         }
 
-       .header-section h1 {
+      .header-section h1 {
             font-size: 28px;
             color: var(--primary-accent);
             margin-bottom: 8px;
             letter-spacing: -0.5px;
         }
 
-       .header-section p.subtitle {
+      .header-section p.subtitle {
             font-size: 15px;
             color: var(--text-muted);
             margin-top: 0;
         }
 
-       .form-group {
+      .form-group {
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -97,7 +97,7 @@
             box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
         }
 
-       .checkbox-group {
+      .checkbox-group {
             display: flex;
             align-items: flex-start;
             gap: 12px;
@@ -106,7 +106,7 @@
             border-radius: 8px;
         }
 
-       .checkbox-group input[type="checkbox"] {
+      .checkbox-group input[type="checkbox"] {
             width: 20px;
             height: 20px;
             margin-top: 2px;
@@ -114,14 +114,14 @@
             accent-color: var(--secondary-accent);
         }
 
-       .checkbox-group label {
+      .checkbox-group label {
             font-weight: 500;
             cursor: pointer;
             line-height: 1.4;
         }
 
         /* 右側輸出預覽區樣式 */
-       .output-panel {
+      .output-panel {
             flex: 1.2;
             display: flex;
             flex-direction: column;
@@ -131,7 +131,7 @@
             border: 1px solid #E8EAED;
         }
 
-       .output-header {
+      .output-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -140,13 +140,13 @@
             border-bottom: 1px solid #DADCE0;
         }
 
-       .output-header h2 {
+      .output-header h2 {
             margin: 0;
             font-size: 20px;
             color: var(--primary-accent);
         }
 
-       .btn-copy {
+      .btn-copy {
             background-color: var(--secondary-accent);
             color: #FFFFFF;
             border: none;
@@ -158,11 +158,11 @@
             transition: background var(--transition-speed), transform 0.1s;
         }
 
-       .btn-copy:hover {
+      .btn-copy:hover {
             background-color: #1557B0;
         }
 
-       .btn-copy:active {
+      .btn-copy:active {
             transform: scale(0.97);
         }
 
@@ -182,11 +182,11 @@
 
         /* 響應式佈局調整 */
         @media (max-width: 900px) {
-           .container {
+          .container {
                 flex-direction: column;
                 padding: 20px;
             }
-           .control-panel {
+          .control-panel {
                 border-right: none;
                 border-bottom: 2px solid var(--gray-band);
                 padding-right: 0;
@@ -300,6 +300,9 @@
 
     // 核心處理邏輯：動態組裝與疊加提示詞字串
     function generatePrompt() {
+        // 修復了雙直線 |
+
+| 被截斷的語法錯誤
         const topic = document.getElementById('input-topic').value |
 
 | "[在此輸入您的核心主題]";
